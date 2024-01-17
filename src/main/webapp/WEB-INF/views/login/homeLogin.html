@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Blog Story Life</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: url("https://images.unsplash.com/photo-1432821596592-e2c18b78144f?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            width: 400px;
+            padding: 30px;
+            background-color: #fff;
+            opacity: 80%;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-login:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2 class="text-center">Đăng nhập</h2>
+    <div th:if="${messageError != null}">
+        <span id="error-message" class="error-message" th:text="${messageError}" style="color: red"></span>
+    </div>
+    <div th:if="${messageCreate != null}">
+        <span id="complete-message" class="complete-message" th:text="${messageCreate}" style="color: #45a049"></span>
+    </div>
+    <form action="#" th:action="@{/login/loginToPage}" th:object="${customer}" method="post" novalidate="novalidate" enctype="multipart/form-data" >
+        <div class="form-group">
+            <label for="username">Tên người dùng:</label>
+            <input type="text" th:field="*{name}" id="username" required>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mật khẩu:</label>
+            <input type="password" id="password" th:field="*{password}" required>
+        </div>
+        <div style="display: inline-flex;padding-left: 10px" >
+            <button type="submit" class="btn btn-login">Đăng nhập</button>
+           <label style="padding-left: 10px"> If you don't have account <a th:href="@{/login/createAccount}">sign here</a></label>
+        </div>
+    </form>
+</div>
+<script>
+    // Lấy đối tượng span
+    var errorMessage = document.getElementById("error-message");
+    // Hiển thị thông báo và tự động ẩn sau 5 giây
+    setTimeout(function () {
+        errorMessage.style.opacity = "0";
+        completeMessage.style.opacity ="0";
+        setTimeout(function () {
+            errorMessage.style.display = "none";
+            completeMessage.style.display = "none";
+        }, 500);
+    }, 5000);
+    var completeMessage = document.getElementById("complete-message");
+    setTimeout(function () {
+        completeMessage.style.opacity ="0";
+        setTimeout(function () {
+            completeMessage.style.display = "none";
+        }, 500);
+    }, 5000);
+</script>
+
+</body>
+</html>
