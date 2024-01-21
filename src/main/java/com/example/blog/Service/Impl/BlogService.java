@@ -1,6 +1,7 @@
 package com.example.blog.Service.Impl;
 
 import com.example.blog.Model.Blog;
+import com.example.blog.Model.Customer;
 import com.example.blog.Repository.IBlogRepository;
 import com.example.blog.Service.IBlogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,10 @@ public class BlogService implements IBlogService {
     public void update(Blog blog) {
         blogRepository.deleteById(blog.getId());
         blogRepository.save(blog);
+    }
+
+    @Override
+    public Iterable<Blog> findBlogByCustomerId(Customer customer) {
+        return blogRepository.findBlogsByCustomerId(customer.getId());
     }
 }

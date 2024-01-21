@@ -12,6 +12,7 @@
         margin: 0;
         padding: 0;
         background-size: cover;
+        background-color: #dddddd;
     }
 
     header {
@@ -25,7 +26,6 @@
         border-radius: 20px;
         margin-left: 30px;
         margin-right: 30px;
-        position: absolute;
         width: 93%;
     }
 
@@ -141,7 +141,7 @@
     <div class="menu">
         <img src="https://1000logos.net/wp-content/uploads/2020/08/Blogger-Logo.png" style="width: 100px;height: 63px;float: left">
         <div style="display: flex ; justify-content: space-around;align-items: center" >
-            <a th:href="@{/blog/}" class="menu-item">Home</a>
+            <a th:href="@{/blog/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
             <a th:href="@{/blog/create/{id}(id=${customer.getId()})}" class="menu-item">Your Blog</a>
             <a class="menu-item">Store</a>
         </div>
@@ -154,7 +154,7 @@
 <div id="container">
     <div id="blog-list">
         <div th:each="row : ${blog}">
-            <img th:src="@{'/file-upload/' + ${row.getImg()}}">
+            <img style="width: 50% ; height: 50%" th:src="@{'/file-upload/' + ${row.getImg()}}">
             <div th:text="${row.getThumbnail()}"></div>
             <div>
                 <button th:href="@{/blog/edit/{id}(id=${row.getId()})}">Edit your blog</button>
@@ -165,20 +165,24 @@
 
     <div id="form">
         <h3>Create your own Blog</h3>
-        <form th:action="@{/blog/save}" th:object="${blog}" method="POST" novalidate="novalidate" enctype="multipart/form-data">
+        <form th:action="@{/blog/save/{id}(id=${customer.getId()})}" th:object="${blogForm}" method="POST" novalidate="novalidate" enctype="multipart/form-data">
             <input type="hidden" th:field="*{id}" />
             <div>
-                <label for="text">Text</label>
-                <textarea rows="6" id="text" th:field="*{text}"></textarea>
+                <label for="picture">Picture</label>
+                <input type="file" id="picture" th:field="*{img}" onchange="previewImage(this)" accept="image/*" />
+                <img id="preview-image" alt="Preview Image" style="display: none; max-width: 100%; margin-top: 10px;" />
+            </div>
+            <div>
+                <label for="typeBlog">Type Blog</label>
+                <textarea rows="3" id="typeBlog" th:field="*{typeBlog}"></textarea>
             </div>
             <div>
                 <label for="thumbnail">Thumbnail</label>
                 <textarea rows="3" id="thumbnail" th:field="*{thumbnail}"></textarea>
             </div>
             <div>
-                <label for="picture">Picture</label>
-                <input type="file" id="picture" th:field="*{img}" onchange="previewImage(this)" accept="image/*" />
-                <img id="preview-image" alt="Preview Image" style="display: none; max-width: 100%; margin-top: 10px;" />
+                <label for="content">Your content blog</label>
+                <textarea rows="12" cols="10" id="content" th:field="*{text}"></textarea>
             </div>
             <input type="submit" value="Create your blog" />
         </form>

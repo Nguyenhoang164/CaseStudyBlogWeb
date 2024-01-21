@@ -1,6 +1,8 @@
 package com.example.blog.Model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "blog")
@@ -13,12 +15,23 @@ public class Blog {
     private String thumbnail;
     private String img;
     private String typeBlog;
-    private String dateCreate;
+    private LocalDate dateCreate;
     @ManyToOne
     @JoinColumn(name = "Customer_id")
     private Customer customer;
 
     public Blog() {
+    }
+
+    public Blog(int id, String name, String text, String thumbnail, String img, String typeBlog, LocalDate dateCreate, Customer customer) {
+        this.id = id;
+        this.name = name;
+        this.text = text;
+        this.thumbnail = thumbnail;
+        this.img = img;
+        this.typeBlog = typeBlog;
+        this.dateCreate = dateCreate;
+        this.customer = customer;
     }
 
     public int getId() {
@@ -61,11 +74,11 @@ public class Blog {
         this.customer = customer;
     }
 
-    public String getDateCreate() {
+    public LocalDate getDateCreate() {
         return dateCreate;
     }
 
-    public void setDateCreate(String dateCreate) {
+    public void setDateCreate(LocalDate dateCreate) {
         this.dateCreate = dateCreate;
     }
 

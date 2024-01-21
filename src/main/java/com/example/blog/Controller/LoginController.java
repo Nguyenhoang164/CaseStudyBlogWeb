@@ -47,7 +47,10 @@ public class LoginController {
                         redirectAttributes.addFlashAttribute("customer",customerCheck);
                         return "redirect:/blog";
                     }
-                }
+                }else {
+                model.addAttribute("messageError", "wrong email or username,password ");
+                return "redirect:/login";
+             }
             }
         model.addAttribute("messageError", "wrong email or username,password ");
         return "redirect:/login";

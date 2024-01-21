@@ -2,20 +2,18 @@ package com.example.blog.Model;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class BlogForm {
     private int id;
     private String name;
     private String text;
     private String thumbnail;
     private String typeBlog;
+    private LocalDate dateCreate;
     private MultipartFile img;
 
-    public BlogForm(int id, String name, String text, MultipartFile img) {
-        this.id = id;
-        this.name = name;
-        this.text = text;
-        this.img = img;
-    }
 
     public BlogForm() {
     }
@@ -66,5 +64,13 @@ public class BlogForm {
 
     public void setThumbnail(String thumbnail) {
         this.thumbnail = thumbnail;
+    }
+
+    public LocalDate getDateCreate() {
+        return dateCreate;
+    }
+
+    public void setDateCreate(LocalDate dateCreate) {
+        this.dateCreate = dateCreate;
     }
 }
