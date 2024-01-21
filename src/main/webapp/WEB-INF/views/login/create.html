@@ -61,7 +61,7 @@
     <div th:if="${messageError != null}">
         <span id="error-message" class="error-message" style="color:red;" th:text="${messageError}"></span>
     </div>
-    <form action="#" th:action="@{/login/save}" th:object="${customer}" method="post" novalidate="novalidate" enctype="multipart/form-data" onsubmit="validate()">
+    <form id="registrationForm" action="#" th:action="@{/login/save}" th:object="${customer}" method="post" novalidate="novalidate" enctype="multipart/form-data" onsubmit="return validate()">
         <div class="form-group">
             <label for="username">Tên người dùng:</label>
             <input type="text" id="username" th:field="*{name}" required>
@@ -94,8 +94,8 @@
         </div>
 
         <div class="form-group">
-            <label for="confirm-password" >Xác nhận mật khẩu:</label>
-            <input type="password" id="confirm-password" name="confirm-password" required>
+            <label for="confirm-password">Xác nhận mật khẩu:</label>
+            <input type="password" id="confirm-password" name="confirm-password" required onblur="checkPasswordMatch()">
             <p id="password-match-error" class="error-message"></p>
         </div>
         <button type="submit" class="btn btn-register">Đăng ký</button>
@@ -103,26 +103,38 @@
     </form>
 </div>
 <script>
-    function validate(){
-        let password = document.getElementById("password").value;
-        let confirmPassword = document.getElementById("confirm-password").value;
-        let messageError = document.getElementById("password-match-error");
-        if (password !== confirmPassword){
-            messageError.textContent("password doesn't match , please try again");
-            return false;
-        }else{
-            messageError.textContent("password match");
-            return true;
+    function checkPasswordMatch() {
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirm-password").value;
+        var errorMessage = document.getElementById("password-match-error");
+        if (password !== confirmPassword) {
+            errorMessage.textContent = "Mật khẩu và xác nhận mật khẩu không khớp!";
+            setTimeout(function () {
+                errorMessage.style.opacity = "0";
+                setTimeout(function () {
+                    errorMessage.style.display = "none";
+                }, 500);
+            }, 5000);
+        } else {
+            errorMessage.textContent = "";
         }
     }
-    var errorMessage = document.getElementById("error-message");
+    function validate() {
+        var form = document.getElementById("registrationForm");
+        var elements = form.elements;
+
+        for (var i = 0; i < elements.length; i++) {
+            if (elements[i].hasAttribute("required") && !elements[i].value) {
+                alert("Vui lòng điền đầy đủ thông tin cho tất cả các trường!");
+                return false;
+            }
+        }
+
+        // Thêm các kiểm tra khác nếu cần
+        return true;
+    }
     // Hiển thị thông báo và tự động ẩn sau 5 giây
-    setTimeout(function () {
-        errorMessage.style.opacity = "0";
-        setTimeout(function () {
-            errorMessage.style.display = "none";
-        }, 500);
-    }, 5000);
+
 </script>
 </body>
 </html>

@@ -3,6 +3,7 @@ package com.example.blog.Controller;
 import com.example.blog.Model.Blog;
 import com.example.blog.Model.Customer;
 import com.example.blog.Service.IBlogService;
+import com.example.blog.Service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 public class BlogController {
     @Autowired
     private IBlogService blogService;
+    @Autowired
+    private ICustomerService customerService;
     @GetMapping("")
     public String index(Model model){
         Customer customer = (Customer) model.asMap().get("customer");
@@ -21,8 +24,9 @@ public class BlogController {
         model.addAttribute("customer",customer);
         return "/home/index";
     }
-    @GetMapping("/create")
-    public String showCreate(Model model){
+    @GetMapping("/create/{id}")
+    public String showCreate(@PathVariable("id") int id, Model model){
+        model.addAttribute("customer", customerService.findCustomerById(id));
         model.addAttribute("blog",new Blog());
         return "/home/create";
     }

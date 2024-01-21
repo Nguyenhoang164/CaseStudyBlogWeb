@@ -6,6 +6,7 @@ public class BlogForm {
     private int id;
     private String name;
     private String text;
+    private String thumbnail;
     private String typeBlog;
     private MultipartFile img;
 
@@ -57,5 +58,13 @@ public class BlogForm {
 
     public void setTypeBlog(String typeBlog) {
         this.typeBlog = typeBlog;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

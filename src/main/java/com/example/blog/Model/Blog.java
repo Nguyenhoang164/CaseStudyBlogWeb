@@ -10,6 +10,7 @@ public class Blog {
     private int id;
     private String name;
     private String text;
+    private String thumbnail;
     private String img;
     private String typeBlog;
     private String dateCreate;
@@ -74,5 +75,13 @@ public class Blog {
 
     public void setTypeBlog(String typeBlog) {
         this.typeBlog = typeBlog;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
     }
 }

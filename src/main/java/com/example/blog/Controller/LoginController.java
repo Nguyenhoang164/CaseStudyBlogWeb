@@ -29,13 +29,17 @@ public class LoginController {
     @RequestMapping("/loginToPage")
     public String loginToPage(@ModelAttribute("customer") Customer customer , Model model , RedirectAttributes redirectAttributes){
         Iterable<Customer> listCustomer = customerService.findAll();
-        Customer customerCheck = customerService.findCustomersByName(customer.getName());
+        String result = customer.getName();
+        Customer customerCheck = customerService.findCustomersByName(result);
         if (customerCheck == null){
-            customerCheck = customerService.findCustomersByEmail(customer.getEmail());
+            customerCheck = customerService.findCustomersByEmail(result);
+            if (customerCheck == null){
+                model.addAttribute("messageError", "wrong email or username,password ");
+                return "/login/homeLogin";
+            }
         }
         for (Customer customerItem : listCustomer) {
-            if (customerCheck.getEmail().equals(customerItem.getEmail()) || customerCheck.getName().equals(customerItem.getName())) {
-                if (customerCheck.getPassword().equals(customerItem.getPassword())) {
+            if ((customerCheck.getEmail().equals(customerItem.getEmail()) && customer.getPassword().equals(customerItem.getPassword())) || (customerCheck.getName().equals(customerItem.getName()) && customerCheck.getPassword().equals(customer.getPassword())))  {
                     if (customerCheck.getPermission().equals("admin")){
                         redirectAttributes.addFlashAttribute("admin",customerCheck);
                         return "redirect:/admin";
@@ -45,7 +49,6 @@ public class LoginController {
                     }
                 }
             }
-        }
         model.addAttribute("messageError", "wrong email or username,password ");
         return "redirect:/login";
         }

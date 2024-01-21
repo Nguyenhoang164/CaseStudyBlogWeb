@@ -18,7 +18,7 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(String name, String email, String password, String phone, String permission, String avatar) {
+    public Customer(String name, String email, String phone,String password, String permission, String avatar) {
         this.name = name;
         this.email = email;
         this.password = password;
