@@ -11,5 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface IBlogRepository extends CrudRepository<Blog,Integer> {
+    Page<Blog> findAll(Pageable pageable);
     Iterable<Blog> findBlogsByCustomerId(int id);
 }

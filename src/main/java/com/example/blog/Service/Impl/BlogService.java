@@ -44,6 +44,11 @@ public class BlogService implements IBlogService {
     }
 
     @Override
+    public Page<Blog> findAll(Pageable pageable) {
+        return blogRepository.findAll(pageable);
+    }
+
+    @Override
     public Iterable<Blog> findBlogByCustomerId(Customer customer) {
         return blogRepository.findBlogsByCustomerId(customer.getId());
     }

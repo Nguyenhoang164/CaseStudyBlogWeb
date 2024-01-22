@@ -141,7 +141,7 @@
     <div class="menu">
         <img src="https://1000logos.net/wp-content/uploads/2020/08/Blogger-Logo.png" style="width: 100px;height: 63px;float: left">
         <div style="display: flex ; justify-content: space-around;align-items: center" >
-            <a th:href="@{/blog/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
+            <a th:href="@{/blog/home/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
             <a th:href="@{/blog/create/{id}(id=${customer.getId()})}" class="menu-item">Your Blog</a>
             <a class="menu-item">Store</a>
         </div>

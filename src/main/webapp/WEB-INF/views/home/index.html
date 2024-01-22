@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="https://www.thymeleaf.org" lang="en">
 <head th:replace="/home/layout :: head">
     <title>ListBlog</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
@@ -14,6 +14,7 @@
         margin: 0;
         padding: 0;
         background-size: cover;
+        width: 100%;
     }
 
     header {
@@ -51,9 +52,6 @@
         flex-wrap: wrap; /* Cho phép xuống dòng khi không đủ chỗ */
         justify-content: space-between;
         width: 96%;
-        height: 900px;
-        align-items: center;
-        background-color: #4CAF50;
         border-radius: 20px;
         margin-left: 30px;
         margin-right: 30px;
@@ -63,15 +61,11 @@
     .blog-list {
         flex-grow: 1;
         float: left;
-        width: 65%;
-        height: 900px;
-        background-color: aqua;
+        width: 40%;
     }
     .blog-banner{
         float: right;
-        width: 35%;
-        height: 900px;
-        background-color: cornflowerblue;
+        width: 60%;
 
     }
 
@@ -156,13 +150,39 @@
         flex-wrap: wrap;
         justify-content: space-around;
     }
+    .blog-banner-item{
+        display: inline-flex;
+        justify-content: space-between;
+        flex-wrap: nowrap;
+    }
+    .blog-banner-item-left{
+        float: left;
+        width: 40%;
+    }
+    .blog-banner-item-right{
+        float: right;
+        width: 60%;
+        padding-left: 10px;
+    }
+    .list-blog-page{
+        width: 100%;
+        height: 600px;
+        margin-top: 760px;
+        display: inline-flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
+    .list-blog-page-item{
+        width:  450px;
+        height: 500px;
+    }
 </style>
 <body>
 <header>
     <div class="menu">
         <img src="https://1000logos.net/wp-content/uploads/2020/08/Blogger-Logo.png" style="width: 100px;height: 63px;float: left">
         <div style="display: flex ; justify-content: space-around;align-items: center" >
-             <a th:href="@{/blog/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
+             <a th:href="@{/blog/home/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
              <a th:href="@{/blog/create/{id}(id=${customer.getId()})}" class="menu-item">Your Blog</a>
              <a class="menu-item">Store</a>
         </div>
@@ -178,7 +198,7 @@
             <h5>Newest blog : <span th:text="${row.getDateCreate()}"></span></h5>
             <h3 th:text="${row.getThumbnail()}"></h3>
             <!-- Kiểm tra độ dài của chuỗi -->
-            <p th:utext="${#strings.length(row.getText()) > 30 ? #strings.substring(row.getText(), 0, 30) + '...' : row.getText()}"></p>
+            <p th:utext="${#strings.length(row.getText()) > 50 ? #strings.substring(row.getText(), 0, 50) + '...' : row.getText()}"></p>
 
             <label>
                 <img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}">
@@ -193,24 +213,58 @@
 <div id="content" class="container">
     <div class="blog-list">
         <div class="card-columns">
-            <div class="card" th:each="row,rowStat : ${blog}">
-                    <div style="width: 100%;height: 400px">
+            <div class="card" th:each="row,rowStat : ${blogContent}">
+                    <div style="width: 100%;height: 300px">
                         <img style="border-radius: 20px;width: 100%;height: 100%" th:src="@{'/file-upload/' + ${row.getImg()}}">
                     </div>
                     <h5 class="card-title" th:text="${row.getName()}"></h5>
-                <p th:utext="${#strings.length(row.getText()) > 30 ? #strings.substring(row.getText(), 0, 30) + '...' : row.getText()}"></p>
+                <p th:utext="${#strings.length(row.getText()) > 50 ? #strings.substring(row.getText(), 0, 50) + '...' : row.getText()}"></p>
                     <a th:href="@{/blog/{id}/view(id=${row.getId()})}" class="btn btn-primary">Read more</a>
                     <label>
-                        <h5 th:text="${row.getDateCreate()}"></h5>
+                        <h5 th:text="'time create :' + ${row.getDateCreate()}"></h5>
                         Write by :<img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}"> <p th:text="${row.getCustomer().getName()}"></p></label>
                     <br>
             </div>
         </div>
     </div>
     <div class="blog-banner">
-
+        <h1 style="font-size: 45px">Latest Blog</h1>
+         <div class="blog-banner-item" th:each="row : ${blogBannerItem}">
+             <div class="blog-banner-item-left">
+                 <img style="width: 100%;border-radius: 20px" th:src="@{'/file-upload/' + ${row.getImg()}}">
+             </div>
+             <div class="blog-banner-item-right">
+                 <label>Time : <span th:text="${row.getDateCreate()}"></span></label>
+                 <p>Content : <span th:text="${row.getTypeBlog()}"></span></p>
+                 <h3 th:text="${row.getThumbnail()}"></h3>
+                 <p th:text="${row.getText()}"></p>
+                 <p>Author : <img style="width: 30px;border-radius: 50%" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}"> <span th:text="${row.getCustomer().getName()}"></span></p>
+             </div>
+         </div>
     </div>
 </div>
+<div class="list-blog-page">
+    <div class="list-blog-page-item" th:each="row,rowStat : ${blogPage}">
+        <div style="height: 50%">
+            <img style="border-radius: 20px;width: 100%;height: 100%" th:src="@{'/file-upload/' + ${row.getImg()}}">
+        </div>
+        <h5 class="card-title" th:text="${row.getName()}"></h5>
+        <p th:utext="${#strings.length(row.getText()) > 50 ? #strings.substring(row.getText(), 0, 50) + '...' : row.getText()}"></p>
+        <a th:href="@{/blog/{id}/view(id=${row.getId()})}" class="btn btn-primary">Read more</a>
+        <label>
+            <h5 th:text="'time create :' + ${row.getDateCreate()}"></h5>
+            Write by :<img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}"> <p th:text="${row.getCustomer().getName()}"></p></label>
+        <br>
+    </div>
+</div>
+<div style="padding-top: 400px">
+    <a th:if="${blogPage.hasPrevious()}"
+       th:href="@{/blog/homePage/{id}(id=${customer.getId()}, page=${blogPage.number - 1})}">Previous</a>
+    <span th:text="${blogPage.number + 1}"></span> | <span th:text="${blogPage.totalPages}"></span>
+    <a th:if="${blogPage.hasNext()}"
+       th:href="@{/blog/homePage/{id}(id=${customer.getId()},page=${blogPage.number + 1})}">Next</a>
+</div>
+
 <script>
     function clearSearch() {
         document.getElementsByName('search')[0].value = '';
@@ -229,7 +283,7 @@
         myIndex++;
         if (myIndex > x.length) {myIndex = 1}
         x[myIndex-1].style.display = "block";
-        setTimeout(carousel, 9000);
+        setTimeout(carousel, 6000);
     }
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

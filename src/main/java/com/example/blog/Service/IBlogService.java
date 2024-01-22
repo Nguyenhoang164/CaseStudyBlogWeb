@@ -8,5 +8,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.Optional;
 
 public interface IBlogService extends IGenerateService<Blog> {
+    Page<Blog> findAll(Pageable pageable);
     Iterable<Blog> findBlogByCustomerId(Customer customer);
 }
