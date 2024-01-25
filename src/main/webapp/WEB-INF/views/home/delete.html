@@ -61,7 +61,6 @@
     }
 
     #container {
-        display: flex;
         width: 100%;
         max-width: 1200px;
     }
@@ -141,7 +140,7 @@
     <div class="menu">
         <img src="https://1000logos.net/wp-content/uploads/2020/08/Blogger-Logo.png" style="width: 100px;height: 63px;float: left">
         <div style="display: flex ; justify-content: space-around;align-items: center" >
-            <a th:href="@{/blog/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
+            <a th:href="@{/blog/home/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
             <a th:href="@{/blog/create/{id}(id=${customer.getId()})}" class="menu-item">Your Blog</a>
             <a class="menu-item">Store</a>
         </div>
@@ -152,25 +151,13 @@
     </div>
 </header>
 <div id="container">
-    <div id="blog-list">
-        <div th:each="row : ${blog}">
-            <img style="width: 50% ; height: 50%" th:src="@{'/file-upload/' + ${row.getImg()}}">
-            <div th:text="${row.getThumbnail()}"></div>
-            <div>
-                <button th:href="@{/blog/edit/{id}(id=${row.getId()})}">Edit your blog</button>
-                <button th:href="@{/blog/delete/{id}(id=${row.getId()})}">Delete blog</button>
-            </div>
-        </div>
-    </div>
-
     <div id="form">
-        <h3>Create your own Blog</h3>
-        <form th:action="@{/blog/save/{id}(id=${customer.getId()})}" th:object="${blogForm}" method="POST" novalidate="novalidate" enctype="multipart/form-data">
+        <h3>Delete your Blog</h3>
+        <form id="delete" th:action="@{/blog/delete/{id}(id=${customer.getId()})}" th:object="${blog}" method="POST" novalidate="novalidate" enctype="multipart/form-data"  onsubmit="return validate()">
             <input type="hidden" th:field="*{id}" />
             <div>
-                <label for="picture">Picture</label>
-                <input type="file" id="picture" th:field="*{img}" onchange="previewImage(this)" accept="image/*" />
-                <img id="preview-image" alt="Preview Image" style="display: none; max-width: 100%; margin-top: 10px;" />
+                <label for="image">Picture</label>
+                <img id="image" alt="Preview Image" th:src="@{'/file-upload/' + ${blog.getImg()}}" style=" max-width: 100%; margin-top: 10px;" />
             </div>
             <div>
                 <label for="typeBlog">Type Blog</label>
@@ -184,33 +171,34 @@
                 <label for="content">Your content blog</label>
                 <textarea rows="12" cols="10" id="content" th:field="*{text}"></textarea>
             </div>
-            <input type="submit" value="Create your blog" />
+            <input type="submit" onclick="confirmDelete()" value="Delete your blog" />
         </form>
     </div>
 </div>
 
 <footer th:replace="/home/layout :: footer"></footer>
-
-<script>
-    function previewImage(input) {
-        var preview = document.getElementById('preview-image');
-        var file = input.files[0];
-
-        if (file) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
-            };
-
-            reader.readAsDataURL(file);
-        } else {
-            preview.src = '';
-            preview.style.display = 'none';
+<script th:inline="javascript">
+    function confirmDelete() {
+        if (confirm('Are you sure you want to delete your blog?')) {
+            document.getElementById('blogForm').submit();
         }
     }
+    function validate() {
+        var form = document.getElementById("delete");
+        var elements = form.elements;
+
+        for (var i = 0; i < elements.length; i++) {
+            if (elements[i].hasAttribute("required") && !elements[i].value) {
+                alert("Vui lòng điền đầy đủ thông tin cho tất cả các trường!");
+                return false;
+            }
+        }
+
+        // Thêm các kiểm tra khác nếu cần
+        return true;
+    }
 </script>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

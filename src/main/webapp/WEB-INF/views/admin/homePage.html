@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        h1, h2 {
+            color: #007bff;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        ul.pagination {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h1 class="display-4">Customer Information</h1>
+
+<div th:if="${customer}" class="card">
+    <div class="card-body">
+        <h2 class="card-title">Customer Details</h2>
+        <img style="width: 30px;height:30px;border-radius: 50%" th:src="@{'/file-upload/' + ${customer.getAvatar()}}">
+        <p class="card-text"><strong>Name:</strong> <span th:text="${customer.name}"></span></p>
+        <p class="card-text"><strong>Email:</strong> <span th:text="${customer.email}"></span></p>
+        <!-- Add other customer details as needed -->
+    </div>
+</div>
+
+<h2 class="mt-4">Customer List</h2>
+
+<table class="table table-striped mt-3">
+    <thead class="thead-dark">
+    <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Avatar</th>
+        <th>Action</th>
+
+        <!-- Add other column headers as needed -->
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="row,rowStart :${customerPage}">
+        <td th:text="${rowStart.count}"></td>
+        <td th:text="${row.name}"></td>
+        <td th:text="${row.email}"></td>
+        <td><img style="width: 50px;height: 50px;border-radius: 15px" th:src="@{'/file-upload/' + ${row.getAvatar()}}"></td>
+        <td><a style="text-decoration: none;color: black" th:href="@{/admin/delete/{id}/{idUser}(id = ${row.getId()} , idUser = ${customer.getId()})}"><button> Delete </button> </a></td>
+
+        <!-- Add other column data as needed -->
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${customerPage.totalPages > 1}" class="mt-3">
+    <ul class="pagination">
+        <li th:each="pageNumber : ${#numbers.sequence(1, customerPage.totalPages)}" class="page-item">
+            <a th:href="@{'?page=' + ${pageNumber}}" class="page-link">Page <span th:text="${pageNumber}"></span></a>
+        </li>
+    </ul>
+</div>
+
+<!-- Bootstrap JS and dependencies (jQuery) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+</body>
+</html>

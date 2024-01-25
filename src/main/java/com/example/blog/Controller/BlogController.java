@@ -38,17 +38,19 @@ public class BlogController {
         for (Blog blog : page){
             list.add(blog);
         }
-        List<Blog> latestBlog = !list.isEmpty() ? Collections.singletonList(list.get(0)) : Collections.emptyList();
-        List<Blog> latestBlogSubList = latestBlog.subList(0,1);
         if (list.size() >= 3){
-            List<Blog> TwoLatestBlogSubList = list.subList(1,3);
-            model.addAttribute("blogBannerItem",TwoLatestBlogSubList);
+            List<Blog> latestBlog = !list.isEmpty() ? Collections.singletonList(list.get(list.size() - 1)) : Collections.emptyList();
+            List<Blog> latestBlogSubList = latestBlog.size() >= 1 ? Collections.singletonList(latestBlog.get(0)) : Collections.emptyList();
+            List<Blog> twoLatestBlogSubList = list.subList(list.size() - 3, list.size() - 1);
+            model.addAttribute("blogContent",latestBlogSubList);
+            model.addAttribute("blogBannerItem",twoLatestBlogSubList);
         }else {
+            model.addAttribute("blogContent",list.isEmpty());
             model.addAttribute("blogBannerItem",list.isEmpty());
         }
         Page<Blog> listPage = blogService.findAll(pageable);
         model.addAttribute("blogPage",listPage);
-        model.addAttribute("blogContent",latestBlogSubList);
+
         model.addAttribute("blog",page);
         model.addAttribute("customer",customer);
         return "/home/index";
@@ -61,17 +63,19 @@ public class BlogController {
         for (Blog blog : page){
             list.add(blog);
         }
-        List<Blog> latestBlog = !list.isEmpty() ? Collections.singletonList(list.get(0)) : Collections.emptyList();
-        List<Blog> latestBlogSubList = latestBlog.subList(0,1);
         if (list.size() >= 3){
-            List<Blog> TwoLatestBlogSubList = list.subList(1,3);
-            model.addAttribute("blogBannerItem",TwoLatestBlogSubList);
+            List<Blog> latestBlog = !list.isEmpty() ? Collections.singletonList(list.get(list.size() - 1)) : Collections.emptyList();
+            List<Blog> latestBlogSubList = latestBlog.size() >= 1 ? Collections.singletonList(latestBlog.get(0)) : Collections.emptyList();
+            List<Blog> twoLatestBlogSubList = list.subList(list.size() - 3, list.size() - 1);
+            model.addAttribute("blogContent",latestBlogSubList);
+            model.addAttribute("blogBannerItem",twoLatestBlogSubList);
         }else {
+            model.addAttribute("blogContent",list.isEmpty());
             model.addAttribute("blogBannerItem",list.isEmpty());
         }
         Page<Blog> listPage = blogService.findAll(pageable);
         model.addAttribute("blogPage",listPage);
-        model.addAttribute("blogContent",latestBlogSubList);
+
         model.addAttribute("blog",page);
         model.addAttribute("customer",customer);
         return "/home/index";
@@ -111,29 +115,50 @@ public class BlogController {
         redirectAttributes.addFlashAttribute("customer",customer);
         return "redirect:/blog";
     }
-    @GetMapping("/{id}/edit")
-    public String showUpdate(Model model, @PathVariable("id") int id){
-        model.addAttribute("blog",blogService.findById(id));
+    @GetMapping("/edit/{id}/{userId}")
+    public String showUpdate(Model model, @PathVariable("id") int id,@PathVariable("userId") int userId){
+        Optional<Blog> blogOptional = blogService.findById(id);
+        Blog blog = new Blog(blogOptional.get().getId(),blogOptional.get().getName(),blogOptional.get().getText(),blogOptional.get().getThumbnail(),blogOptional.get().getImg(),blogOptional.get().getTypeBlog(),blogOptional.get().getDateCreate(),blogOptional.get().getCustomer());
+        model.addAttribute("blog",blog);
+        model.addAttribute("customer",customerService.findCustomerById(userId));
         return "/home/update";
     }
-    @PostMapping("/update")
-    public String saveBlog(@ModelAttribute("blog") Blog blog){
+    @PostMapping("/update/{id}")
+    public String saveBlog(@ModelAttribute("blog") BlogForm blogForm,@PathVariable("id")int id , RedirectAttributes redirectAttributes){
+        Customer customer = customerService.findCustomerById(id);
+        MultipartFile multipartFile = blogForm.getImg();
+        String fileImg = multipartFile.getOriginalFilename();
+        try {
+            FileCopyUtils.copy(blogForm.getImg().getBytes(),new File(fileUpload + fileImg ));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        LocalDate timeCreate = LocalDate.now();
+        Blog blog = new Blog(blogForm.getId(), blogForm.getName(), blogForm.getText(), blogForm.getThumbnail(), fileImg, blogForm.getTypeBlog(),timeCreate, customer);
         blogService.update(blog);
+        redirectAttributes.addFlashAttribute("customer",customer);
         return "redirect:/blog";
     }
-    @GetMapping("/{id}/delete")
-    public String showDelete(Model model, @PathVariable("id") int id){
-        model.addAttribute("blog",blogService.findById(id));
+    @GetMapping("/delete/{id}/{userId}")
+    public String showDelete(Model model, @PathVariable("id") int id,@PathVariable("userId") int userId){
+        Optional<Blog> blogOptional = blogService.findById(id);
+        Blog blog = new Blog(blogOptional.get().getId(),blogOptional.get().getName(),blogOptional.get().getText(),blogOptional.get().getThumbnail(),blogOptional.get().getImg(),blogOptional.get().getTypeBlog(),blogOptional.get().getDateCreate(),blogOptional.get().getCustomer());
+        model.addAttribute("blog",blog);
+        model.addAttribute("customer",customerService.findCustomerById(userId));
         return "/home/delete";
     }
-    @PostMapping("/delete")
-    public String deleteBlog(@ModelAttribute("blog") Blog blog){
+    @PostMapping("/delete/{id}")
+    public String deleteBlog(@ModelAttribute("blog") Blog blog , @PathVariable("id") int id , RedirectAttributes redirectAttributes){
         blogService.remove(blog.getId());
+        redirectAttributes.addFlashAttribute("customer",customerService.findCustomerById(id));
         return "redirect:/blog";
     }
-    @GetMapping("/{id}/view")
-    public String view(Model model, @PathVariable("id") int id){
-        model.addAttribute("blog",blogService.findById(id));
+    @GetMapping("/{id}/view/{idUser}")
+    public String view(Model model, @PathVariable("id") int id,@PathVariable("idUser") int idUser){
+        Optional<Blog> blogOptional = blogService.findById(id);
+        Blog blog = new Blog(blogOptional.get().getId(),blogOptional.get().getName(),blogOptional.get().getText(),blogOptional.get().getThumbnail(),blogOptional.get().getImg(),blogOptional.get().getTypeBlog(),blogOptional.get().getDateCreate(),blogOptional.get().getCustomer());
+        model.addAttribute("blog",blog);
+        model.addAttribute("customer",customerService.findCustomerById(idUser));
         return "/home/view";
     }
 }

@@ -12,7 +12,9 @@
         margin: 0;
         padding: 0;
         background-size: cover;
-        background-color: #dddddd;
+        background-color: #b2b2b2;
+        width: 100%;
+        height: 3000px;
     }
 
     header {
@@ -157,15 +159,15 @@
             <img style="width: 50% ; height: 50%" th:src="@{'/file-upload/' + ${row.getImg()}}">
             <div th:text="${row.getThumbnail()}"></div>
             <div>
-                <button th:href="@{/blog/edit/{id}(id=${row.getId()})}">Edit your blog</button>
-                <button th:href="@{/blog/delete/{id}(id=${row.getId()})}">Delete blog</button>
+              <a style="text-decoration: none;color: black" th:href="@{/blog/edit/{id}/{userId}(id=${row.getId()} ,userId =${customer.getId()})}" ><button >Edit your blog</button></a>
+                <a style="text-decoration: none;color: black" th:href="@{/blog/delete/{id}/{userId}(id=${row.getId()} ,userId =${customer.getId()})}"><button>Delete blog</button> </a>
             </div>
         </div>
     </div>
 
     <div id="form">
         <h3>Create your own Blog</h3>
-        <form th:action="@{/blog/save/{id}(id=${customer.getId()})}" th:object="${blogForm}" method="POST" novalidate="novalidate" enctype="multipart/form-data">
+        <form id="create" th:action="@{/blog/save/{id}(id=${customer.getId()})}" th:object="${blogForm}" method="POST" novalidate="novalidate" enctype="multipart/form-data" onsubmit="return validate()">
             <input type="hidden" th:field="*{id}" />
             <div>
                 <label for="picture">Picture</label>
@@ -209,6 +211,20 @@
             preview.src = '';
             preview.style.display = 'none';
         }
+    }
+    function validate() {
+        var form = document.getElementById("create");
+        var elements = form.elements;
+
+        for (var i = 0; i < elements.length; i++) {
+            if (elements[i].hasAttribute("required") && !elements[i].value) {
+                alert("Vui lòng điền đầy đủ thông tin cho tất cả các trường!");
+                return false;
+            }
+        }
+
+        // Thêm các kiểm tra khác nếu cần
+        return true;
     }
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

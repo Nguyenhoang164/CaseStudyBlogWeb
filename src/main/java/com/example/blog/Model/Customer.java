@@ -1,5 +1,7 @@
 package com.example.blog.Model;
 
+import net.bytebuddy.implementation.bind.annotation.Default;
+
 import javax.persistence.*;
 
 @Entity
@@ -82,4 +84,5 @@ public class Customer {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

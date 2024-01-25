@@ -154,23 +154,25 @@
         display: inline-flex;
         justify-content: space-between;
         flex-wrap: nowrap;
+        width: 100%;
     }
     .blog-banner-item-left{
         float: left;
-        width: 40%;
+        width:40%;
     }
     .blog-banner-item-right{
         float: right;
         width: 60%;
         padding-left: 10px;
+        word-wrap: break-word;
     }
     .list-blog-page{
         width: 100%;
         height: 600px;
-        margin-top: 760px;
         display: inline-flex;
         justify-content: space-between;
         flex-wrap: wrap;
+        word-wrap: break-word;
     }
     .list-blog-page-item{
         width:  450px;
@@ -182,9 +184,9 @@
     <div class="menu">
         <img src="https://1000logos.net/wp-content/uploads/2020/08/Blogger-Logo.png" style="width: 100px;height: 63px;float: left">
         <div style="display: flex ; justify-content: space-around;align-items: center" >
-             <a th:href="@{/blog/home/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
-             <a th:href="@{/blog/create/{id}(id=${customer.getId()})}" class="menu-item">Your Blog</a>
-             <a class="menu-item">Store</a>
+            <a th:href="@{/blog/home/{id}(id=${customer.getId()})}" class="menu-item">Home</a>
+            <a th:href="@{/blog/create/{id}(id=${customer.getId()})}" class="menu-item">Your Blog</a>
+            <a href="https://shopee.vn/?gclid=Cj0KCQiAh8OtBhCQARIsAIkWb6_MZ5P2KW2oUntZWQeSGrwS0I4szKc670BYYQKheFBKbf0asEPT5mgaAu-7EALw_wcB" class="menu-item">Store</a>
         </div>
         <div style="display: flex;float: right;justify-content: space-between;align-items: center">
             <img style="width: 30px;height:30px;border-radius: 50%" th:src="@{'/file-upload/' + ${customer.getAvatar()}}"/>
@@ -192,79 +194,90 @@
         </div>
     </div>
 </header>
-<div class="slide-content-mini" th:each="row : ${blog}">
+<div class="w3-content w3-section">
+<div class="slide-content-mini w3-animate-fading" th:each="row : ${blog}">
     <div class="text-content-mini" >
         <div style="margin-top: 100px;padding-left: 20px">
             <h5>Newest blog : <span th:text="${row.getDateCreate()}"></span></h5>
             <h3 th:text="${row.getThumbnail()}"></h3>
             <!-- Kiểm tra độ dài của chuỗi -->
             <p th:utext="${#strings.length(row.getText()) > 50 ? #strings.substring(row.getText(), 0, 50) + '...' : row.getText()}"></p>
-
+            <a th:href="@{/blog/{id}/view/{idUser}(id=${row.getId()} , idUser=${customer.getId()})}" class="btn-primary">Read more</a>
+            <br>
             <label>
                 <img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}">
                 Write by: <p style="padding-left: 20px" th:text="${row.getCustomer().getName()}"></p>
             </label>
         </div>
     </div>
-             <div class="img-content-mini">
-                 <img style="width: 100%;height: 100%" th:src="@{'/file-upload/' + ${row.getImg()}}">
-             </div>
+    <div class="img-content-mini">
+        <img style="width: 100%;height: 100%" th:src="@{'/file-upload/' + ${row.getImg()}}">
+    </div>
+</div>
 </div>
 <div id="content" class="container">
     <div class="blog-list">
         <div class="card-columns">
             <div class="card" th:each="row,rowStat : ${blogContent}">
-                    <div style="width: 100%;height: 300px">
-                        <img style="border-radius: 20px;width: 100%;height: 100%" th:src="@{'/file-upload/' + ${row.getImg()}}">
-                    </div>
-                    <h5 class="card-title" th:text="${row.getName()}"></h5>
+                <div style="width: 100%;height: 300px">
+                    <img style="border-radius: 20px;width: 100%;height: 100%" th:src="@{'/file-upload/' + ${row.getImg()}}">
+                </div>
+                <h5 class="card-title" th:text="${row.getThumbnail()}"></h5>
                 <p th:utext="${#strings.length(row.getText()) > 50 ? #strings.substring(row.getText(), 0, 50) + '...' : row.getText()}"></p>
-                    <a th:href="@{/blog/{id}/view(id=${row.getId()})}" class="btn btn-primary">Read more</a>
-                    <label>
-                        <h5 th:text="'time create :' + ${row.getDateCreate()}"></h5>
-                        Write by :<img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}"> <p th:text="${row.getCustomer().getName()}"></p></label>
-                    <br>
+                <a th:href="@{/blog/{id}/view/{idUser}(id=${row.getId()} , idUser=${customer.getId()})}" class="btn-primary">Read more</a>
+                <label>
+                    <h5 th:text="'time create :' + ${row.getDateCreate()}"></h5>
+                    Write by :<img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}"> <p th:text="${row.getCustomer().getName()}"></p></label>
+                <br>
             </div>
         </div>
     </div>
     <div class="blog-banner">
-        <h1 style="font-size: 45px">Latest Blog</h1>
-         <div class="blog-banner-item" th:each="row : ${blogBannerItem}">
-             <div class="blog-banner-item-left">
-                 <img style="width: 100%;border-radius: 20px" th:src="@{'/file-upload/' + ${row.getImg()}}">
-             </div>
-             <div class="blog-banner-item-right">
-                 <label>Time : <span th:text="${row.getDateCreate()}"></span></label>
-                 <p>Content : <span th:text="${row.getTypeBlog()}"></span></p>
-                 <h3 th:text="${row.getThumbnail()}"></h3>
-                 <p th:text="${row.getText()}"></p>
-                 <p>Author : <img style="width: 30px;border-radius: 50%" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}"> <span th:text="${row.getCustomer().getName()}"></span></p>
-             </div>
-         </div>
+        <div class="blog-banner-item" th:each="row : ${blogBannerItem}">
+            <div class="blog-banner-item-left">
+                <img style="width: 100%;border-radius: 20px;height: 100%" th:src="@{'/file-upload/' + ${row.getImg()}}">
+            </div>
+            <div class="blog-banner-item-right">
+                <label>Time : <span th:text="${row.getDateCreate()}"></span></label>
+                <p>Content : <span th:text="${row.getTypeBlog()}"></span></p>
+                <h3 th:text="${row.getThumbnail()}"></h3>
+                <p th:utext="${#strings.length(row.getText()) > 50 ? #strings.substring(row.getText(), 0, 50) + '...' : row.getText()}"></p>
+                <a th:href="@{/blog/{id}/view/{idUser}(id=${row.getId()} , idUser=${customer.getId()})}" class="btn-primary">Read more</a>
+                <br>
+                <label>
+                    <img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}">
+                    Write by: <p style="padding-left: 20px" th:text="${row.getCustomer().getName()}"></p>
+                </label>
+            </div>
+        </div>
     </div>
+</div>
+<div style="font-size: 35px;padding-top: 600px">
+    <h1 >Latest Blog</h1>
 </div>
 <div class="list-blog-page">
     <div class="list-blog-page-item" th:each="row,rowStat : ${blogPage}">
         <div style="height: 50%">
             <img style="border-radius: 20px;width: 100%;height: 100%" th:src="@{'/file-upload/' + ${row.getImg()}}">
         </div>
-        <h5 class="card-title" th:text="${row.getName()}"></h5>
+        <h5 class="card-title" th:text="${row.getThumbnail()}"></h5>
         <p th:utext="${#strings.length(row.getText()) > 50 ? #strings.substring(row.getText(), 0, 50) + '...' : row.getText()}"></p>
-        <a th:href="@{/blog/{id}/view(id=${row.getId()})}" class="btn btn-primary">Read more</a>
+        <a th:href="@{/blog/{id}/view/{idUser}(id=${row.getId()} , idUser=${customer.getId()})}" class="btn-primary">Read more</a>
+        <h5 th:text="'time create :' + ${row.getDateCreate()}"></h5>
         <label>
-            <h5 th:text="'time create :' + ${row.getDateCreate()}"></h5>
-            Write by :<img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}"> <p th:text="${row.getCustomer().getName()}"></p></label>
+            <img style="width: 30px;height:30px;border-radius: 50%;" th:src="@{'/file-upload/' + ${row.getCustomer().getAvatar()}}">
+            Write by: <p style="padding-left: 20px" th:text="${row.getCustomer().getName()}"></p>
+        </label>
         <br>
     </div>
 </div>
-<div style="padding-top: 400px">
+<div style="margin-top: 400px;align-items: center;text-align: center">
     <a th:if="${blogPage.hasPrevious()}"
        th:href="@{/blog/homePage/{id}(id=${customer.getId()}, page=${blogPage.number - 1})}">Previous</a>
     <span th:text="${blogPage.number + 1}"></span> | <span th:text="${blogPage.totalPages}"></span>
     <a th:if="${blogPage.hasNext()}"
        th:href="@{/blog/homePage/{id}(id=${customer.getId()},page=${blogPage.number + 1})}">Next</a>
 </div>
-
 <script>
     function clearSearch() {
         document.getElementsByName('search')[0].value = '';
@@ -283,7 +296,7 @@
         myIndex++;
         if (myIndex > x.length) {myIndex = 1}
         x[myIndex-1].style.display = "block";
-        setTimeout(carousel, 6000);
+        setTimeout(carousel, 9000);
     }
 </script>
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

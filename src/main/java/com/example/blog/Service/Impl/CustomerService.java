@@ -4,6 +4,8 @@ import com.example.blog.Model.Customer;
 import com.example.blog.Repository.ICustomerRepository;
 import com.example.blog.Service.ICustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -51,5 +53,10 @@ public class CustomerService implements ICustomerService {
     @Override
     public Customer findCustomersByEmail(String email) {
         return customerRepository.findCustomersByEmail(email);
+    }
+
+    @Override
+    public Page<Customer> findAllBy(Pageable pageable) {
+        return customerRepository.findAllBy(pageable);
     }
 }

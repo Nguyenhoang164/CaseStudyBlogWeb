@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface IBlogRepository extends CrudRepository<Blog,Integer> {
+    void deleteBlogByCustomerId(int id);
     Page<Blog> findAll(Pageable pageable);
     Iterable<Blog> findBlogsByCustomerId(int id);
 }

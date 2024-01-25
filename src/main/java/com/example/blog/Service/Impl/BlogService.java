@@ -44,6 +44,11 @@ public class BlogService implements IBlogService {
     }
 
     @Override
+    public void deleteBlogByCustomerId(int id) {
+        blogRepository.deleteBlogByCustomerId(id);
+    }
+
+    @Override
     public Page<Blog> findAll(Pageable pageable) {
         return blogRepository.findAll(pageable);
     }
